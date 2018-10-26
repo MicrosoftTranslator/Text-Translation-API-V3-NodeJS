@@ -4,6 +4,7 @@ language and determines the numbe of characters in each sentence. */
 /* This template relies on the request module, a simplified and user friendly
 way to make HTTP requests. */
 const request = require('request');
+const uuidv4 = require('uuid/v4');
 
 /* Checks to see if the subscription key is available
 as an environment variable. If you are setting your subscription key as a
@@ -29,6 +30,7 @@ function breakSentence(){
         headers: {
           'Ocp-Apim-Subscription-Key': subscriptionKey,
           'Content-type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
         },
         body: [{
               'text': 'How are you? I am fine. What did you do today?'
