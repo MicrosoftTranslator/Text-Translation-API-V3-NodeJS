@@ -1,60 +1,45 @@
-'use strict';
+/* This simple app uses the '/breaksentence' resource to identify the source
+language and determines the numbe of characters in each sentence. */
 
-let fs = require ('fs');
-let https = require ('https');
+/* This template relies on the request module, a simplified and user friendly
+way to make HTTP requests. */
+const request = require('request');
 
-// **********************************************
-// *** Update or verify the following values. ***
-// **********************************************
+/* Checks to see if the subscription key is available
+as an environment variable. If you are setting your subscription key as a
+string, then comment these lines out.
 
-// Replace the subscriptionKey string value with your valid subscription key.
-let subscriptionKey = 'ENTER KEY HERE';
+If you want to set your subscription key as a string, replace the value for
+the Ocp-Apim-Subscription-Key header as a string. */
+const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
+if (!subscriptionKey) {
+  throw new Error('Environment variable for your subscription key is not set.')
+};
 
-let host = 'api.cognitive.microsofttranslator.com';
-let path = '/breaksentence?api-version=3.0';
+/* If you encounter any issues with the base_url or path, make sure that you are
+using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-break-sentence */
+function breakSentence(){
+    const options = {
+        method: 'POST',
+        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        url: 'breaksentence',
+        qs: {
+          'api-version': '3.0',
+        },
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Content-type': 'application/json',
+        },
+        body: [{
+              'text': 'How are you? I am fine. What did you do today?'
+        }],
+        json: true,
+    };
 
-let params = '';
-
-let text = 'How are you? I am fine. What did you do today?';
-
-let response_handler = function (response) {
-    let body = '';
-    response.on ('data', function (d) {
-        body += d;
-    });
-    response.on ('end', function () {
-        let json = JSON.stringify(JSON.parse(body), null, 4);
-        console.log(json);
-    });
-    response.on ('error', function (e) {
-        console.log ('Error: ' + e.message);
+    request(options, function(err, res, body){
+        console.log(JSON.stringify(body, null, 4));
     });
 };
 
-let get_guid = function () {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-let BreakSentences = function (content) {
-    let request_params = {
-        method : 'POST',
-        hostname : host,
-        path : path + params,
-        headers : {
-            'Content-Type' : 'application/json',
-            'Ocp-Apim-Subscription-Key' : subscriptionKey,
-            'X-ClientTraceId' : get_guid (),
-        }
-    };
-
-    let req = https.request (request_params, response_handler);
-    req.write (content);
-    req.end ();
-}
-
-let content = JSON.stringify ([{'Text' : text}]);
-
-BreakSentences (content);
+// Call the function to detect sentence length.
+breakSentence();
