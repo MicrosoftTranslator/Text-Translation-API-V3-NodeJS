@@ -12,7 +12,7 @@ string, then comment these lines out.
 
 If you want to set your subscription key as a string, replace the value for
 the Ocp-Apim-Subscription-Key header as a string. */
-const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
+const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
 if (!subscriptionKey) {
   throw new Error('Environment variable for your subscription key is not set.')
 };
