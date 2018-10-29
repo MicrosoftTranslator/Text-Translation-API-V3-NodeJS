@@ -20,7 +20,7 @@ if (!subscriptionKey) {
 /* If you encounter any issues with the base_url or path, make sure that you are
 using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-translate */
 function translateText(){
-    const options = {
+    let options = {
         method: 'POST',
         baseUrl: 'https://api.cognitive.microsofttranslator.com/',
         url: 'translate',

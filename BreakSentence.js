@@ -12,7 +12,7 @@ string, then comment these lines out.
 
 If you want to set your subscription key as a string, replace the value for
 the Ocp-Apim-Subscription-Key header as a string. */
-const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
+const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
 if (!subscriptionKey) {
   throw new Error('Environment variable for your subscription key is not set.')
 };
@@ -20,7 +20,7 @@ if (!subscriptionKey) {
 /* If you encounter any issues with the base_url or path, make sure that you are
 using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-break-sentence */
 function breakSentence(){
-    const options = {
+    let options = {
         method: 'POST',
         baseUrl: 'https://api.cognitive.microsofttranslator.com/',
         url: 'breaksentence',

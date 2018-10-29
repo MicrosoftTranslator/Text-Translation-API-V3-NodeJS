@@ -20,7 +20,7 @@ if (!subscriptionKey) {
 /* If you encounter any issues with the base_url or path, make sure that you are
 using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-languages */
 function getLanguages(){
-    const options = {
+    let options = {
         method: 'GET',
         baseUrl: 'https://api.cognitive.microsofttranslator.com/',
         url: 'languages',
