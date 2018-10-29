@@ -1,5 +1,5 @@
 /* This simple app uses the '/detect' resource to identify the language of
-# the provided text or texts. */
+the provided text or texts. */
 
 /* This template relies on the request module, a simplified and user friendly
 way to make HTTP requests. */
@@ -12,7 +12,7 @@ string, then comment these lines out.
 
 If you want to set your subscription key as a string, replace the value for
 the Ocp-Apim-Subscription-Key header as a string. */
-const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
+const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
 if (!subscriptionKey) {
   throw new Error('Environment variable for your subscription key is not set.')
 };
@@ -33,7 +33,7 @@ function detectLanguage(){
           'X-ClientTraceId': uuidv4().toString()
         },
         body: [{
-              'text': 'How are you? I am fine. What did you do today?'
+              'text': 'Salve, mondo!'
         }],
         json: true,
     };
@@ -43,5 +43,5 @@ function detectLanguage(){
     });
 };
 
-// Call the function to detect sentence length.
+// Call the function to identify the language of the provided text.
 detectLanguage();

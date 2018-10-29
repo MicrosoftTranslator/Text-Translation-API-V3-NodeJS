@@ -1,62 +1,51 @@
-'use strict';
+/* This simple app uses the '/transliterate' resource to transliterate text from
+one script to another. In this sample, Japanese is transliterated to use the
+Latin alphabet. */
 
-let fs = require ('fs');
-let https = require ('https');
+/* This template relies on the request module, a simplified and user friendly
+way to make HTTP requests. */
+const request = require('request');
+const uuidv4 = require('uuid/v4');
 
-// **********************************************
-// *** Update or verify the following values. ***
-// **********************************************
+/* Checks to see if the subscription key is available
+as an environment variable. If you are setting your subscription key as a
+string, then comment these lines out.
 
-// Replace the subscriptionKey string value with your valid subscription key.
-let subscriptionKey = 'ENTER KEY HERE';
+If you want to set your subscription key as a string, replace the value for
+the Ocp-Apim-Subscription-Key header as a string. */
+const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
+if (!subscriptionKey) {
+  throw new Error('Environment variable for your subscription key is not set.')
+};
 
-let host = 'api.cognitive.microsofttranslator.com';
-let path = '/transliterate?api-version=3.0';
+/* If you encounter any issues with the base_url or path, make sure that you are
+using the latest endpoint: https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-transliterate */
+function transliterateText(){
+    const options = {
+        method: 'POST',
+        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        url: 'transliterate',
+        qs: {
+          'api-version': '3.0',
+          'language': 'ja',
+          'fromScript': 'jpan',
+          'toScript': 'latn'
+        },
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Content-type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
+        },
+        body: [{
+              'text': 'こんにちは'
+        }],
+        json: true,
+    };
 
-// Transliterate text in Japanese from Japanese script (i.e. Hiragana/Katakana/Kanji) to Latin script.
-let params = '&language=ja&fromScript=jpan&toScript=latn';
-
-// Transliterate "good afternoon".
-let text = 'こんにちは';
-
-let response_handler = function (response) {
-    let body = '';
-    response.on ('data', function (d) {
-        body += d;
-    });
-    response.on ('end', function () {
-        let json = JSON.stringify(JSON.parse(body), null, 4);
-        console.log(json);
-    });
-    response.on ('error', function (e) {
-        console.log ('Error: ' + e.message);
+    request(options, function(err, res, body){
+        console.log(JSON.stringify(body, null, 4));
     });
 };
 
-let get_guid = function () {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-let Transliterate = function (content) {
-    let request_params = {
-        method : 'POST',
-        hostname : host,
-        path : path + params,
-        headers : {
-            'Content-Type' : 'application/json',
-            'Ocp-Apim-Subscription-Key' : subscriptionKey,
-            'X-ClientTraceId' : get_guid (),
-        }
-    };
-
-    let req = https.request (request_params, response_handler);
-    req.write (content);
-    req.end ();
-}
-
-let content = JSON.stringify ([{'Text' : text}]);
-
-Transliterate (content);
+// Call the function to transliterate text.
+transliterateText();
