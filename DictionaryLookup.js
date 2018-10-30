@@ -1,60 +1,49 @@
-'use strict';
+/* This simple app uses the '/dictionary/lookup' resource to return alternative
+translations for a word and a small number of idiomatic phrases. */
 
-let fs = require ('fs');
-let https = require ('https');
+/* This template relies on the request module, a simplified and user friendly
+way to make HTTP requests. */
+const request = require('request');
+const uuidv4 = require('uuid/v4');
 
-// **********************************************
-// *** Update or verify the following values. ***
-// **********************************************
+/* Checks to see if the subscription key is available
+as an environment variable. If you are setting your subscription key as a
+string, then comment these lines out.
 
-// Replace the subscriptionKey string value with your valid subscription key.
-let subscriptionKey = 'ENTER KEY HERE';
+If you want to set your subscription key as a string, replace the value for
+the Ocp-Apim-Subscription-Key header as a string. */
+const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
+if (!subscriptionKey) {
+  throw new Error('Environment variable for your subscription key is not set.')
+};
 
-let host = 'api.cognitive.microsofttranslator.com';
-let path = '/dictionary/lookup?api-version=3.0';
+/* If you encounter any issues with the base_url or path, make sure that you are
+using the latest endpoint: https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-dictionary-lookup */
+function dictionaryLookup(){
+    let options = {
+        method: 'POST',
+        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        url: 'dictionary/lookup',
+        qs: {
+          'api-version': '3.0',
+          'from': 'en',
+          'to': 'es'
+        },
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Content-type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
+        },
+        body: [{
+              'text': 'Elephants'
+        }],
+        json: true,
+    };
 
-let params = '&from=en&to=fr';
-
-let text = 'great';
-
-let response_handler = function (response) {
-    let body = '';
-    response.on ('data', function (d) {
-        body += d;
-    });
-    response.on ('end', function () {
-        let json = JSON.stringify(JSON.parse(body), null, 4);
-        console.log(json);
-    });
-    response.on ('error', function (e) {
-        console.log ('Error: ' + e.message);
+    request(options, function(err, res, body){
+        console.log(JSON.stringify(body, null, 4));
     });
 };
 
-let get_guid = function () {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-let DictionaryLookup = function (content) {
-    let request_params = {
-        method : 'POST',
-        hostname : host,
-        path : path + params,
-        headers : {
-            'Content-Type' : 'application/json',
-            'Ocp-Apim-Subscription-Key' : subscriptionKey,
-            'X-ClientTraceId' : get_guid (),
-        }
-    };
-
-    let req = https.request (request_params, response_handler);
-    req.write (content);
-    req.end ();
-}
-
-let content = JSON.stringify ([{'Text' : text}]);
-
-DictionaryLookup (content);
+// Call the function to return alternate translations.
+dictionaryLookup();

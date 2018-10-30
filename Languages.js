@@ -1,50 +1,44 @@
-'use strict';
+/* This simple app performs a GET request to the /languages resource to
+retrieve a list of languages supported by Microsoft Translator. */
 
-let fs = require ('fs');
-let https = require ('https');
+/* This template relies on the request module, a simplified and user friendly
+way to make HTTP requests. */
+const request = require('request');
+const uuidv4 = require('uuid/v4');
 
-// **********************************************
-// *** Update or verify the following values. ***
-// **********************************************
+/* Checks to see if the subscription key is available
+as an environment variable. If you are setting your subscription key as a
+string, then comment these lines out.
 
-// Replace the subscriptionKey string value with your valid subscription key.
-let subscriptionKey = 'ENTER KEY HERE';
+If you want to set your subscription key as a string, replace the value for
+the Ocp-Apim-Subscription-Key header as a string. */
+const subscriptionKey = process.env.YOUR_ENV_VARIABLE;
+if (!subscriptionKey) {
+  throw new Error('Environment variable for your subscription key is not set.')
+};
 
-let host = 'api.cognitive.microsofttranslator.com';
-let path = '/languages?api-version=3.0';
+/* If you encounter any issues with the base_url or path, make sure that you are
+using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-languages */
+function getLanguages(){
+    let options = {
+        method: 'GET',
+        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        url: 'languages',
+        qs: {
+          'api-version': '3.0',
+        },
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Content-type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
+        },
+        json: true,
+    };
 
-let output_path = 'output.txt';
-let ws = fs.createWriteStream(output_path);
-
-let response_handler = function (response) {
-    let body = '';
-    response.on ('data', function (d) {
-        body += d;
-    });
-    response.on ('end', function () {
-        let json = JSON.stringify(JSON.parse(body), null, 4);
-        ws.write (json);
-        ws.close ();
-        console.log("File written.");
-
-    });
-    response.on ('error', function (e) {
-        console.log ('Error: ' + e.message);
+    request(options, function(err, res, body){
+        console.log(JSON.stringify(body, null, 4));
     });
 };
 
-let GetLanguages = function () {
-    let request_params = {
-        method : 'GET',
-        hostname : host,
-        path : path,
-        headers : {
-            'Ocp-Apim-Subscription-Key' : subscriptionKey,
-        }
-    };
-
-    let req = https.request (request_params, response_handler);
-    req.end ();
-}
-
-GetLanguages ();
+// Call the function to get a list of supported languages.
+getLanguages();
