@@ -26,8 +26,7 @@ function translateText(){
         url: 'translate',
         qs: {
           'api-version': '3.0',
-          'to': 'it',
-          'to': 'de'
+          'to': ['de', 'it']
         },
         headers: {
           'Ocp-Apim-Subscription-Key': subscriptionKey,
