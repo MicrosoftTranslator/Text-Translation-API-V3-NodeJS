@@ -6,12 +6,18 @@ way to make HTTP requests. */
 const request = require('request');
 const uuidv4 = require('uuid/v4');
 
+var endpoint_var = 'TRANSLATOR_TEXT_ENDPOINT';
+if (!process.env[endpoint_var]) {
+    throw new Error('Please set/export the following environment variable: ' + endpoint_var);
+}
+var endpoint = process.env[endpoint_var];
+
 /* If you encounter any issues with the base_url or path, make sure that you are
 using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-languages */
 function getLanguages(){
     let options = {
         method: 'GET',
-        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        baseUrl: endpoint,
         url: 'languages',
         qs: {
           'api-version': '3.0',
