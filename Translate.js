@@ -16,6 +16,11 @@ if (!process.env[endpoint_var]) {
     throw new Error('Please set/export the following environment variable: ' + endpoint_var);
 }
 var endpoint = process.env[endpoint_var];
+var region_var = 'TRANSLATOR_TEXT_REGION_AKA_LOCATION';
+if (!process.env[region_var]) {
+    throw new Error('Please set/export the following environment variable: ' + region_var);
+}
+var region = process.env[region_var];
 
 /* If you encounter any issues with the base_url or path, make sure that you are
 using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-translate */
@@ -30,6 +35,7 @@ function translateText(){
         },
         headers: {
           'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Ocp-Apim-Subscription-Region': region,
           'Content-type': 'application/json',
           'X-ClientTraceId': uuidv4().toString()
         },
