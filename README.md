@@ -16,12 +16,14 @@ products:
 
 This repository includes Node.js code samples for Microsoft Translator. The samples are designed to run on Node 8.12.x or later. Each sample corresponds to a **Quickstart** activity on [doc.microsoft.com](https://docs.microsoft.com/azure/cognitive-services/translator/), including:
 
-* [Translating text](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-translate)
-* [Transliterating text](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-transliterate)
-* [Identifying the language of source text](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-detect)
-* [Getting alternate translations](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-dictionary)
-* [Getting a complete list of supported languages](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-languages)
-* [Determining sentence length](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-nodejs-sentences)
+* Translating text
+* Transliterating text
+* Identifying the language of source text
+* Getting alternate translations
+* Getting a complete list of supported languages
+* Determining sentence length
+
+[Get started with the Translator quickstart](https://docs.microsoft.com/azure/cognitive-services/translator/quickstart-translator).
 
 ## Prerequisites
 
@@ -29,7 +31,8 @@ Here's what you'll need before you use these samples:
 
 * Your favorite IDE or text editor
 * [Node 8.12.x or later](https://nodejs.org/en/)
-* An Azure subscription with Translator enabled. [Sign-up for a free account](https://docs.microsoft.com/azure/cognitive-services/translator/translator-text-how-to-signup)!
+* An Azure subscription - [Sign-up for a free account](https://docs.microsoft.com/azure/cognitive-services/translator/translator-text-how-to-signup)!
+* A Translator resource - [Create a Translator resource](https://ms.portal.azure.com/#create/Microsoft.CognitiveServicesTextTranslation)
 
 ## Code samples
 
