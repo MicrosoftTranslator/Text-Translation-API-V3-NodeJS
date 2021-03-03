@@ -17,7 +17,7 @@ products:
 This repository includes Node.js code samples for Microsoft Translator. The samples are designed to run on Node 8.12.x or later. Each sample corresponds to a **Quickstart** activity on [doc.microsoft.com](https://docs.microsoft.com/azure/cognitive-services/translator/), including:
 
 * Translating text
-* Transliterating text
+* Transliterating text 
 * Identifying the language of source text
 * Getting alternate translations
 * Getting a complete list of supported languages
